@@ -1,4 +1,54 @@
 basePath: /
+definitions:
+  dto.CreateCustomerRequest:
+    properties:
+      birth_date:
+        description: '"YYYY-MM-DD"'
+        type: string
+      birth_place:
+        type: string
+      full_name:
+        type: string
+      ktp_photo_url:
+        type: string
+      legal_name:
+        type: string
+      nik:
+        type: string
+      salary:
+        type: number
+      selfie_photo_url:
+        type: string
+    required:
+    - full_name
+    - legal_name
+    - nik
+    type: object
+  dto.CustomerResponse:
+    properties:
+      birth_date:
+        type: string
+      birth_place:
+        type: string
+      created_at:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      ktp_photo_url:
+        type: string
+      legal_name:
+        type: string
+      nik:
+        type: string
+      salary:
+        type: number
+      selfie_photo_url:
+        type: string
+      updated_at:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -6,6 +56,59 @@ info:
   title: PT-XYZ Multifinance API
   version: "1.0"
 paths:
+  /api/v1/customers:
+    post:
+      consumes:
+      - application/json
+      description: Create/register a new customer
+      parameters:
+      - description: Customer Data
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCustomerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CustomerResponse'
+        "400":
+          description: invalid request or validation error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register new customer
+      tags:
+      - customer
+  /api/v1/customers/{id}:
+    get:
+      description: Get detail of customer by ID
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CustomerResponse'
+        "404":
+          description: customer not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get customer by ID
+      tags:
+      - customer
   /health:
     get:
       description: Cek status service
