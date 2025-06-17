@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  dto.CreateCustomerRequest:
+  dto.CreateConsumerRequest:
     properties:
       birth_date:
         description: '"YYYY-MM-DD"'
@@ -24,7 +24,7 @@ definitions:
     - legal_name
     - nik
     type: object
-  dto.CustomerResponse:
+  dto.ConsumerResponse:
     properties:
       birth_date:
         type: string
@@ -87,6 +87,66 @@ definitions:
       username:
         type: string
     type: object
+  dto.TransactionRequest:
+    properties:
+      admin_fee:
+        minimum: 0
+        type: integer
+      asset_name:
+        type: string
+      consumer_id:
+        type: string
+      contract_number:
+        type: string
+      installment:
+        minimum: 1
+        type: integer
+      interest:
+        minimum: 0
+        type: integer
+      otr:
+        minimum: 1
+        type: integer
+      tenor_month:
+        enum:
+        - 1
+        - 2
+        - 3
+        - 6
+        type: integer
+    required:
+    - admin_fee
+    - asset_name
+    - consumer_id
+    - contract_number
+    - installment
+    - interest
+    - otr
+    - tenor_month
+    type: object
+  dto.TransactionResponse:
+    properties:
+      admin_fee:
+        type: integer
+      asset_name:
+        type: string
+      consumer_id:
+        type: string
+      contract_number:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      installment:
+        type: integer
+      interest:
+        type: integer
+      otr:
+        type: integer
+      tenor_month:
+        type: integer
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -94,25 +154,25 @@ info:
   title: PT-XYZ Multifinance API
   version: "1.0"
 paths:
-  /api/v1/customers:
+  /api/v1/consumers:
     post:
       consumes:
       - application/json
-      description: Create/register a new customer
+      description: Create/register a new consumer
       parameters:
-      - description: Customer Data
+      - description: Consumer Data
         in: body
-        name: customer
+        name: consumer
         required: true
         schema:
-          $ref: '#/definitions/dto.CreateCustomerRequest'
+          $ref: '#/definitions/dto.CreateConsumerRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.CustomerResponse'
+            $ref: '#/definitions/dto.ConsumerResponse'
         "400":
           description: invalid request or validation error
           schema:
@@ -121,14 +181,14 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Register new customer
+      summary: Register new consumer
       tags:
-      - customer
-  /api/v1/customers/{id}:
+      - consumer
+  /api/v1/consumers/{id}:
     get:
-      description: Get detail of customer by ID
+      description: Get detail of consumer by ID
       parameters:
-      - description: Customer ID
+      - description: Consumer ID
         in: path
         name: id
         required: true
@@ -139,18 +199,18 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.CustomerResponse'
+            $ref: '#/definitions/dto.ConsumerResponse'
         "404":
-          description: customer not found
+          description: consumer not found
           schema:
             additionalProperties:
               type: string
             type: object
       security:
       - BearerAuth: []
-      summary: Get customer by ID
+      summary: Get consumer by ID
       tags:
-      - customer
+      - consumer
   /api/v1/login:
     post:
       consumes:
@@ -225,6 +285,64 @@ paths:
       summary: Health Check
       tags:
       - Utility
+  /transactions:
+    post:
+      consumes:
+      - application/json
+      description: Endpoint to create a new transaction. Validates consumer limit
+        and processes the transaction.
+      parameters:
+      - description: Transaction data
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Transaction created successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request or limit exceeded
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new transaction
+      tags:
+      - Transactions
+  /transactions/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Fetch details of a transaction by its ID.
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction details
+          schema:
+            $ref: '#/definitions/dto.TransactionResponse'
+        "404":
+          description: Transaction not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get transaction by ID
+      tags:
+      - Transactions
 securityDefinitions:
   BearerAuth:
     in: header

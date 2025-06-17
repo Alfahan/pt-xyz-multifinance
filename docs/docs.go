@@ -15,14 +15,14 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/customers": {
+        "/api/v1/consumers": {
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create/register a new customer",
+                "description": "Create/register a new consumer",
                 "consumes": [
                     "application/json"
                 ],
@@ -30,17 +30,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "customer"
+                    "consumer"
                 ],
-                "summary": "Register new customer",
+                "summary": "Register new consumer",
                 "parameters": [
                     {
-                        "description": "Customer Data",
-                        "name": "customer",
+                        "description": "Consumer Data",
+                        "name": "consumer",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateCustomerRequest"
+                            "$ref": "#/definitions/dto.CreateConsumerRequest"
                         }
                     }
                 ],
@@ -48,7 +48,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.CustomerResponse"
+                            "$ref": "#/definitions/dto.ConsumerResponse"
                         }
                     },
                     "400": {
@@ -63,25 +63,25 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/customers/{id}": {
+        "/api/v1/consumers/{id}": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get detail of customer by ID",
+                "description": "Get detail of consumer by ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "customer"
+                    "consumer"
                 ],
-                "summary": "Get customer by ID",
+                "summary": "Get consumer by ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Customer ID",
+                        "description": "Consumer ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -91,11 +91,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.CustomerResponse"
+                            "$ref": "#/definitions/dto.ConsumerResponse"
                         }
                     },
                     "404": {
-                        "description": "customer not found",
+                        "description": "consumer not found",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -218,10 +218,97 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/transactions": {
+            "post": {
+                "description": "Endpoint to create a new transaction. Validates consumer limit and processes the transaction.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Create a new transaction",
+                "parameters": [
+                    {
+                        "description": "Transaction data",
+                        "name": "transaction",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Transaction created successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or limit exceeded",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions/{id}": {
+            "get": {
+                "description": "Fetch details of a transaction by its ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get transaction by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction details",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TransactionResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "dto.CreateCustomerRequest": {
+        "dto.CreateConsumerRequest": {
             "type": "object",
             "required": [
                 "full_name",
@@ -256,7 +343,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CustomerResponse": {
+        "dto.ConsumerResponse": {
             "type": "object",
             "properties": {
                 "birth_date": {
@@ -348,6 +435,90 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.TransactionRequest": {
+            "type": "object",
+            "required": [
+                "admin_fee",
+                "asset_name",
+                "consumer_id",
+                "contract_number",
+                "installment",
+                "interest",
+                "otr",
+                "tenor_month"
+            ],
+            "properties": {
+                "admin_fee": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "asset_name": {
+                    "type": "string"
+                },
+                "consumer_id": {
+                    "type": "string"
+                },
+                "contract_number": {
+                    "type": "string"
+                },
+                "installment": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "interest": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "otr": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "tenor_month": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        6
+                    ]
+                }
+            }
+        },
+        "dto.TransactionResponse": {
+            "type": "object",
+            "properties": {
+                "admin_fee": {
+                    "type": "integer"
+                },
+                "asset_name": {
+                    "type": "string"
+                },
+                "consumer_id": {
+                    "type": "string"
+                },
+                "contract_number": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "installment": {
+                    "type": "integer"
+                },
+                "interest": {
+                    "type": "integer"
+                },
+                "otr": {
+                    "type": "integer"
+                },
+                "tenor_month": {
+                    "type": "integer"
                 }
             }
         }

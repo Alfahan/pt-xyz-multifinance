@@ -38,15 +38,21 @@ func main() {
 	db := pkg.NewDatabase(cfg)
 	defer db.Close()
 
-	// Inisialisasi Customer
-	customerRepo := repository.NewCustomerRepository(db)
-	customerUC := usecase.NewCustomerUsecase(customerRepo)
-	customerHandler := handler.NewCustomerHandler(customerUC)
+	// Inisialisasi Consumer
+	consumerRepo := repository.NewConsumerRepository(db)
+	consumerUC := usecase.NewConsumerUsecase(consumerRepo)
+	consumerHandler := handler.NewConsumerHandler(consumerUC)
 
 	// Inisialisasi User
 	userRepo := repository.NewUserRepository(db)
 	userUC := usecase.NewUserUsecase(userRepo)
 	userHandler := handler.NewUserHandler(userUC)
+
+	// Inisialisasi Transaction
+	transactionRepo := repository.NewTransactionRepository(db)
+	consumerLimitRepo := repository.NewConsumerLimitRepository(db)
+	transactionUC := usecase.NewTransactionUsecase(transactionRepo, consumerLimitRepo)
+	transactionHandler := handler.NewTransactionHandler(transactionUC)
 
 	e := echo.New()
 
@@ -71,13 +77,16 @@ func main() {
 	// API routes
 	api := e.Group("/api/v1")
 
-	// Customer routes (dengan JWT middleware dari internal/middleware)
-	api.POST("/customers", customerHandler.Create, customMiddleware.JWTMiddleware)
-	api.GET("/customers/:id", customerHandler.GetByID, customMiddleware.JWTMiddleware)
+	// Consumer routes (dengan JWT middleware dari internal/middleware)
+	api.POST("/consumers", consumerHandler.Create, customMiddleware.JWTMiddleware)
+	api.GET("/consumers/:id", consumerHandler.GetByID, customMiddleware.JWTMiddleware)
 
 	// User routes (tanpa middleware, untuk register & login)
 	api.POST("/register", userHandler.Register)
 	api.POST("/login", userHandler.Login)
+
+	e.POST("/transactions", transactionHandler.CreateTransaction, customMiddleware.JWTMiddleware)
+	e.GET("/transactions/:id", transactionHandler.GetTransactionByID, customMiddleware.JWTMiddleware)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":" + cfg.ServerPort))

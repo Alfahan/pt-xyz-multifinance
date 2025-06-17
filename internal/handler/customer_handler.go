@@ -8,28 +8,28 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// CustomerHandler handles customer endpoints
-type CustomerHandler struct {
-	uc usecase.CustomerUsecase
+// ConsumerHandler handles consumer endpoints
+type ConsumerHandler struct {
+	uc usecase.ConsumerUsecase
 }
 
-func NewCustomerHandler(uc usecase.CustomerUsecase) *CustomerHandler {
-	return &CustomerHandler{uc: uc}
+func NewConsumerHandler(uc usecase.ConsumerUsecase) *ConsumerHandler {
+	return &ConsumerHandler{uc: uc}
 }
 
 // Create godoc
-// @Summary      Register new customer
-// @Description  Create/register a new customer
-// @Tags         customer
+// @Summary      Register new consumer
+// @Description  Create/register a new consumer
+// @Tags         consumer
 // @Accept       json
 // @Produce      json
-// @Param        customer  body      dto.CreateCustomerRequest  true  "Customer Data"
-// @Success      201  {object}  dto.CustomerResponse
+// @Param        consumer  body      dto.CreateConsumerRequest  true  "Consumer Data"
+// @Success      201  {object}  dto.ConsumerResponse
 // @Failure      400  {object}  map[string]string "invalid request or validation error"
-// @Router       /api/v1/customers [post]
+// @Router       /api/v1/consumers [post]
 // @Security     BearerAuth
-func (h *CustomerHandler) Create(c echo.Context) error {
-	var req dto.CreateCustomerRequest
+func (h *ConsumerHandler) Create(c echo.Context) error {
+	var req dto.CreateConsumerRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
 	}
@@ -41,16 +41,16 @@ func (h *CustomerHandler) Create(c echo.Context) error {
 }
 
 // GetByID godoc
-// @Summary      Get customer by ID
-// @Description  Get detail of customer by ID
-// @Tags         customer
+// @Summary      Get consumer by ID
+// @Description  Get detail of consumer by ID
+// @Tags         consumer
 // @Produce      json
-// @Param        id   path      string  true  "Customer ID"
-// @Success      200  {object}  dto.CustomerResponse
-// @Failure      404  {object}  map[string]string "customer not found"
-// @Router       /api/v1/customers/{id} [get]
+// @Param        id   path      string  true  "Consumer ID"
+// @Success      200  {object}  dto.ConsumerResponse
+// @Failure      404  {object}  map[string]string "consumer not found"
+// @Router       /api/v1/consumers/{id} [get]
 // @Security     BearerAuth
-func (h *CustomerHandler) GetByID(c echo.Context) error {
+func (h *ConsumerHandler) GetByID(c echo.Context) error {
 	id := c.Param("id")
 	res, err := h.uc.GetByID(c.Request().Context(), id)
 	if err != nil {

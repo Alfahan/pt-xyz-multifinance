@@ -7,20 +7,20 @@ import (
 	"pt-xyz-multifinance/internal/domain"
 )
 
-type CustomerRepository interface {
-	Create(ctx context.Context, customer *domain.Customer) error
-	GetByID(ctx context.Context, id string) (*domain.Customer, error)
+type ConsumerRepository interface {
+	Create(ctx context.Context, consumer *domain.Consumer) error
+	GetByID(ctx context.Context, id string) (*domain.Consumer, error)
 }
 
-type customerRepository struct {
+type consumerRepository struct {
 	db *sql.DB
 }
 
-func NewCustomerRepository(db *sql.DB) CustomerRepository {
-	return &customerRepository{db: db}
+func NewConsumerRepository(db *sql.DB) ConsumerRepository {
+	return &consumerRepository{db: db}
 }
 
-func (r *customerRepository) Create(ctx context.Context, customer *domain.Customer) error {
+func (r *consumerRepository) Create(ctx context.Context, consumer *domain.Consumer) error {
 	query := `
 		INSERT INTO consumers (
 			id, nik, full_name, legal_name, birth_place, birth_date, salary, photo_ktp, photo_selfie, created_at, updated_at
@@ -30,22 +30,22 @@ func (r *customerRepository) Create(ctx context.Context, customer *domain.Custom
 	`
 	_, err := r.db.ExecContext(
 		ctx, query,
-		customer.ID,
-		customer.NIK,
-		customer.FullName,
-		customer.LegalName,
-		customer.BirthPlace,
-		customer.BirthDate,
-		customer.Salary,
-		customer.KTPPhotoURL,    // photo_ktp di SQL
-		customer.SelfiePhotoURL, // photo_selfie di SQL
-		customer.CreatedAt,
-		customer.UpdatedAt,
+		consumer.ID,
+		consumer.NIK,
+		consumer.FullName,
+		consumer.LegalName,
+		consumer.BirthPlace,
+		consumer.BirthDate,
+		consumer.Salary,
+		consumer.KTPPhotoURL,    // photo_ktp di SQL
+		consumer.SelfiePhotoURL, // photo_selfie di SQL
+		consumer.CreatedAt,
+		consumer.UpdatedAt,
 	)
 	return err
 }
 
-func (r *customerRepository) GetByID(ctx context.Context, id string) (*domain.Customer, error) {
+func (r *consumerRepository) GetByID(ctx context.Context, id string) (*domain.Consumer, error) {
 	query := `
 		SELECT id, nik, full_name, legal_name, birth_place, birth_date, salary, photo_ktp, photo_selfie, created_at, updated_at
 		FROM consumers
@@ -53,19 +53,19 @@ func (r *customerRepository) GetByID(ctx context.Context, id string) (*domain.Cu
 	`
 	row := r.db.QueryRowContext(ctx, query, id)
 
-	var customer domain.Customer
+	var consumer domain.Consumer
 	err := row.Scan(
-		&customer.ID,
-		&customer.NIK,
-		&customer.FullName,
-		&customer.LegalName,
-		&customer.BirthPlace,
-		&customer.BirthDate,
-		&customer.Salary,
-		&customer.KTPPhotoURL,    // photo_ktp di SQL
-		&customer.SelfiePhotoURL, // photo_selfie di SQL
-		&customer.CreatedAt,
-		&customer.UpdatedAt,
+		&consumer.ID,
+		&consumer.NIK,
+		&consumer.FullName,
+		&consumer.LegalName,
+		&consumer.BirthPlace,
+		&consumer.BirthDate,
+		&consumer.Salary,
+		&consumer.KTPPhotoURL,    // photo_ktp di SQL
+		&consumer.SelfiePhotoURL, // photo_selfie di SQL
+		&consumer.CreatedAt,
+		&consumer.UpdatedAt,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -73,5 +73,5 @@ func (r *customerRepository) GetByID(ctx context.Context, id string) (*domain.Cu
 		}
 		return nil, err
 	}
-	return &customer, nil
+	return &consumer, nil
 }
