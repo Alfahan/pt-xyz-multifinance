@@ -308,41 +308,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.CreateConsumerRequest": {
-            "type": "object",
-            "required": [
-                "full_name",
-                "legal_name",
-                "nik"
-            ],
-            "properties": {
-                "birth_date": {
-                    "description": "\"YYYY-MM-DD\"",
-                    "type": "string"
-                },
-                "birth_place": {
-                    "type": "string"
-                },
-                "full_name": {
-                    "type": "string"
-                },
-                "ktp_photo_url": {
-                    "type": "string"
-                },
-                "legal_name": {
-                    "type": "string"
-                },
-                "nik": {
-                    "type": "string"
-                },
-                "salary": {
-                    "type": "number"
-                },
-                "selfie_photo_url": {
-                    "type": "string"
-                }
-            }
-        },
         "dto.ConsumerResponse": {
             "type": "object",
             "properties": {
@@ -377,6 +342,41 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateConsumerRequest": {
+            "type": "object",
+            "required": [
+                "full_name",
+                "legal_name",
+                "nik"
+            ],
+            "properties": {
+                "birth_date": {
+                    "description": "\"YYYY-MM-DD\"",
+                    "type": "string"
+                },
+                "birth_place": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "ktp_photo_url": {
+                    "type": "string"
+                },
+                "legal_name": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "string"
+                },
+                "salary": {
+                    "type": "number"
+                },
+                "selfie_photo_url": {
                     "type": "string"
                 }
             }
@@ -535,7 +535,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "localhost:8081",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "PT-XYZ Multifinance API",

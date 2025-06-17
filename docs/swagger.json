@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "localhost:8081",
     "basePath": "/",
     "paths": {
         "/api/v1/consumers": {
@@ -302,41 +302,6 @@
         }
     },
     "definitions": {
-        "dto.CreateConsumerRequest": {
-            "type": "object",
-            "required": [
-                "full_name",
-                "legal_name",
-                "nik"
-            ],
-            "properties": {
-                "birth_date": {
-                    "description": "\"YYYY-MM-DD\"",
-                    "type": "string"
-                },
-                "birth_place": {
-                    "type": "string"
-                },
-                "full_name": {
-                    "type": "string"
-                },
-                "ktp_photo_url": {
-                    "type": "string"
-                },
-                "legal_name": {
-                    "type": "string"
-                },
-                "nik": {
-                    "type": "string"
-                },
-                "salary": {
-                    "type": "number"
-                },
-                "selfie_photo_url": {
-                    "type": "string"
-                }
-            }
-        },
         "dto.ConsumerResponse": {
             "type": "object",
             "properties": {
@@ -371,6 +336,41 @@
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateConsumerRequest": {
+            "type": "object",
+            "required": [
+                "full_name",
+                "legal_name",
+                "nik"
+            ],
+            "properties": {
+                "birth_date": {
+                    "description": "\"YYYY-MM-DD\"",
+                    "type": "string"
+                },
+                "birth_place": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "ktp_photo_url": {
+                    "type": "string"
+                },
+                "legal_name": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "string"
+                },
+                "salary": {
+                    "type": "number"
+                },
+                "selfie_photo_url": {
                     "type": "string"
                 }
             }
