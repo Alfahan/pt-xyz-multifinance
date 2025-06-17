@@ -6,6 +6,7 @@ import (
 	"os"
 	"pt-xyz-multifinance/config"
 	"pt-xyz-multifinance/internal/handler"
+	customMiddleware "pt-xyz-multifinance/internal/middleware" // Alias untuk middleware internal
 	"pt-xyz-multifinance/internal/repository"
 	"pt-xyz-multifinance/internal/usecase"
 	"pt-xyz-multifinance/pkg"
@@ -23,6 +24,12 @@ import (
 // @description     API untuk PT-XYZ Multifinance
 // @host            localhost:8080
 // @BasePath        /
+// @securityDefinitions.apikey BearerAuth
+// @type            http
+// @scheme          bearer
+// @bearerFormat    JWT
+// @name            Authorization
+// @in              header
 func main() {
 	// Load .env file (kalau ada)
 	_ = godotenv.Load()
@@ -31,9 +38,15 @@ func main() {
 	db := pkg.NewDatabase(cfg)
 	defer db.Close()
 
+	// Inisialisasi Customer
 	customerRepo := repository.NewCustomerRepository(db)
 	customerUC := usecase.NewCustomerUsecase(customerRepo)
 	customerHandler := handler.NewCustomerHandler(customerUC)
+
+	// Inisialisasi User
+	userRepo := repository.NewUserRepository(db)
+	userUC := usecase.NewUserUsecase(userRepo)
+	userHandler := handler.NewUserHandler(userUC)
 
 	e := echo.New()
 
@@ -41,6 +54,7 @@ func main() {
 	swaggerUser := os.Getenv("SWAGGER_USER")
 	swaggerPass := os.Getenv("SWAGGER_PASS")
 
+	// Gunakan middleware.BasicAuth dari echo/v4
 	swaggerBasicAuth := middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
 		if username == swaggerUser && password == swaggerPass {
 			return true, nil
@@ -48,15 +62,24 @@ func main() {
 		return false, nil
 	})
 
+	// Swagger endpoint
 	e.GET("/swagger/*", echoSwagger.WrapHandler, swaggerBasicAuth)
 
+	// Health check endpoint
 	e.GET("/health", HealthCheck)
 
-	// routes
+	// API routes
 	api := e.Group("/api/v1")
-	api.POST("/customers", customerHandler.Create)
-	api.GET("/customers/:id", customerHandler.GetByID)
 
+	// Customer routes (dengan JWT middleware dari internal/middleware)
+	api.POST("/customers", customerHandler.Create, customMiddleware.JWTMiddleware)
+	api.GET("/customers/:id", customerHandler.GetByID, customMiddleware.JWTMiddleware)
+
+	// User routes (tanpa middleware, untuk register & login)
+	api.POST("/register", userHandler.Register)
+	api.POST("/login", userHandler.Login)
+
+	// Start server
 	e.Logger.Fatal(e.Start(":" + cfg.ServerPort))
 }
 
