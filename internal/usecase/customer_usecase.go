@@ -12,26 +12,26 @@ import (
 	"github.com/google/uuid"
 )
 
-type CustomerUsecase interface {
-	Create(ctx context.Context, req *dto.CreateCustomerRequest) (*dto.CustomerResponse, error)
-	GetByID(ctx context.Context, id string) (*dto.CustomerResponse, error)
+type ConsumerUsecase interface {
+	Create(ctx context.Context, req *dto.CreateConsumerRequest) (*dto.ConsumerResponse, error)
+	GetByID(ctx context.Context, id string) (*dto.ConsumerResponse, error)
 }
 
-type customerUsecase struct {
-	repo repository.CustomerRepository
+type consumerUsecase struct {
+	repo repository.ConsumerRepository
 }
 
-func NewCustomerUsecase(repo repository.CustomerRepository) CustomerUsecase {
-	return &customerUsecase{repo: repo}
+func NewConsumerUsecase(repo repository.ConsumerRepository) ConsumerUsecase {
+	return &consumerUsecase{repo: repo}
 }
 
-func (u *customerUsecase) Create(ctx context.Context, req *dto.CreateCustomerRequest) (*dto.CustomerResponse, error) {
+func (u *consumerUsecase) Create(ctx context.Context, req *dto.CreateConsumerRequest) (*dto.ConsumerResponse, error) {
 	birthDate, err := time.Parse("2006-01-02", req.BirthDate)
 	if err != nil {
 		return nil, errors.New("invalid birth date format, use YYYY-MM-DD")
 	}
 	now := time.Now()
-	customer := &domain.Customer{
+	consumer := &domain.Consumer{
 		ID:             uuid.New().String(),
 		NIK:            req.NIK,
 		FullName:       req.FullName,
@@ -44,36 +44,36 @@ func (u *customerUsecase) Create(ctx context.Context, req *dto.CreateCustomerReq
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
-	err = u.repo.Create(ctx, customer)
+	err = u.repo.Create(ctx, consumer)
 	if err != nil {
 		return nil, err
 	}
-	return customerToResponse(customer), nil
+	return consumerToResponse(consumer), nil
 }
 
-func (u *customerUsecase) GetByID(ctx context.Context, id string) (*dto.CustomerResponse, error) {
-	customer, err := u.repo.GetByID(ctx, id)
+func (u *consumerUsecase) GetByID(ctx context.Context, id string) (*dto.ConsumerResponse, error) {
+	consumer, err := u.repo.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	if customer == nil {
-		return nil, errors.New("customer not found")
+	if consumer == nil {
+		return nil, errors.New("consumer not found")
 	}
-	return customerToResponse(customer), nil
+	return consumerToResponse(consumer), nil
 }
 
-func customerToResponse(customer *domain.Customer) *dto.CustomerResponse {
-	return &dto.CustomerResponse{
-		ID:             customer.ID,
-		NIK:            customer.NIK,
-		FullName:       customer.FullName,
-		LegalName:      customer.LegalName,
-		BirthPlace:     customer.BirthPlace,
-		BirthDate:      customer.BirthDate.Format("2006-01-02"),
-		Salary:         customer.Salary,
-		KTPPhotoURL:    customer.KTPPhotoURL,
-		SelfiePhotoURL: customer.SelfiePhotoURL,
-		CreatedAt:      customer.CreatedAt.Format(time.RFC3339),
-		UpdatedAt:      customer.UpdatedAt.Format(time.RFC3339),
+func consumerToResponse(consumer *domain.Consumer) *dto.ConsumerResponse {
+	return &dto.ConsumerResponse{
+		ID:             consumer.ID,
+		NIK:            consumer.NIK,
+		FullName:       consumer.FullName,
+		LegalName:      consumer.LegalName,
+		BirthPlace:     consumer.BirthPlace,
+		BirthDate:      consumer.BirthDate.Format("2006-01-02"),
+		Salary:         consumer.Salary,
+		KTPPhotoURL:    consumer.KTPPhotoURL,
+		SelfiePhotoURL: consumer.SelfiePhotoURL,
+		CreatedAt:      consumer.CreatedAt.Format(time.RFC3339),
+		UpdatedAt:      consumer.UpdatedAt.Format(time.RFC3339),
 	}
 }

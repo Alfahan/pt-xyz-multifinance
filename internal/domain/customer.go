@@ -2,7 +2,7 @@ package domain
 
 import "time"
 
-type Customer struct {
+type Consumer struct {
 	ID             string    `json:"id"`
 	NIK            string    `json:"nik"`
 	FullName       string    `json:"full_name"`

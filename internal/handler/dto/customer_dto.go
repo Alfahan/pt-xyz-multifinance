@@ -1,6 +1,6 @@
 package dto
 
-type CreateCustomerRequest struct {
+type CreateConsumerRequest struct {
 	NIK            string  `json:"nik" validate:"required"`
 	FullName       string  `json:"full_name" validate:"required"`
 	LegalName      string  `json:"legal_name" validate:"required"`
@@ -11,7 +11,7 @@ type CreateCustomerRequest struct {
 	SelfiePhotoURL string  `json:"selfie_photo_url"`
 }
 
-type CustomerResponse struct {
+type ConsumerResponse struct {
 	ID             string  `json:"id"`
 	NIK            string  `json:"nik"`
 	FullName       string  `json:"full_name"`
