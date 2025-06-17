@@ -92,15 +92,6 @@ go test ./test/...
 
 ---
 
-## Scripts Otomatis
-
-Berisi script bash untuk automasi:
-- `scripts/migrate.go` — Migrasi database
-- `scripts/seeder.go` — Seeder data awal
-- Tambahkan script lain sesuai kebutuhan development
-
----
-
 ## Dokumentasi API (Swagger)
 
 Dokumentasi API tersedia di folder `docs/` (Swagger/OpenAPI).  
