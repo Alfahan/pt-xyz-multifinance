@@ -1,0 +1,21 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: API untuk PT-XYZ Multifinance
+  title: PT-XYZ Multifinance API
+  version: "1.0"
+paths:
+  /health:
+    get:
+      description: Cek status service
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Health Check
+      tags:
+      - Utility
+swagger: "2.0"
