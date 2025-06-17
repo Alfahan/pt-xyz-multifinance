@@ -9,6 +9,87 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
+        "/api/v1/customers": {
+            "post": {
+                "description": "Create/register a new customer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "customer"
+                ],
+                "summary": "Register new customer",
+                "parameters": [
+                    {
+                        "description": "Customer Data",
+                        "name": "customer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateCustomerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CustomerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request or validation error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/customers/{id}": {
+            "get": {
+                "description": "Get detail of customer by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "customer"
+                ],
+                "summary": "Get customer by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Customer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CustomerResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "customer not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Cek status service",
@@ -24,6 +105,81 @@
                             "additionalProperties": true
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.CreateCustomerRequest": {
+            "type": "object",
+            "required": [
+                "full_name",
+                "legal_name",
+                "nik"
+            ],
+            "properties": {
+                "birth_date": {
+                    "description": "\"YYYY-MM-DD\"",
+                    "type": "string"
+                },
+                "birth_place": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "ktp_photo_url": {
+                    "type": "string"
+                },
+                "legal_name": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "string"
+                },
+                "salary": {
+                    "type": "number"
+                },
+                "selfie_photo_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CustomerResponse": {
+            "type": "object",
+            "properties": {
+                "birth_date": {
+                    "type": "string"
+                },
+                "birth_place": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "ktp_photo_url": {
+                    "type": "string"
+                },
+                "legal_name": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "string"
+                },
+                "salary": {
+                    "type": "number"
+                },
+                "selfie_photo_url": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         }
