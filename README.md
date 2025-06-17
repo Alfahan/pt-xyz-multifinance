@@ -13,7 +13,6 @@ Project ini mendukung pengembangan scalable, maintainable, dan mudah di-deploy.
 ├── config/        # Konfigurasi aplikasi (.env, config.go)
 ├── internal/      # Source code utama (domain, handler, repository, usecase, middleware)
 ├── pkg/           # Library utilitas yang reusable (database, redis, kafka, dsb)
-├── scripts/       # Script bantu (migrate.go, seeder.go, dsb)
 ├── docs/          # Dokumentasi API (Swagger/OpenAPI)
 ├── test/          # Unit & integration test
 ├── tmp/           # File sementara (binary hasil build, dsb)
@@ -82,22 +81,6 @@ Instalasi dan penggunaan [Air](https://github.com/air-verse/air):
 
 > **Otomatis Generate Swagger:**  
 > Project ini sudah dikonfigurasi agar setiap ada perubahan kode, dokumentasi Swagger (`docs/`) akan digenerate otomatis sebelum build. Lihat bagian [Swagger Otomatis](#swagger-otomatis).
-
----
-
-## Migrasi Database & Seeder
-
-Migrasi dan seeder otomatis dari entity di `internal/domain` (menggunakan GORM):
-
-1. **Migrasi**
-    ```sh
-    go run scripts/migrate.go
-    ```
-
-2. **Seeder**
-    ```sh
-    go run scripts/seeder.go
-    ```
 
 ---
 
