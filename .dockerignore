@@ -1,0 +1,20 @@
+# Binary files
+*.exe
+*.dll
+*.so
+
+# Temporary files
+*.tmp
+*.log
+*.out
+
+# Git files
+.git
+.gitignore
+
+# IDE settings
+.vscode
+.idea
+
+# Test files
+test/
