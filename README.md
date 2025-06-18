@@ -42,26 +42,112 @@ Project ini mendukung pengembangan scalable, maintainable, dan mudah di-deploy.
 
 ---
 
+## Menjalankan dengan Docker
+
+Aplikasi dapat dijalankan secara cepat menggunakan Docker & Docker Compose tanpa perlu install Go, PostgreSQL, atau Redis secara manual.
+
+### 1. Siapkan file `.env`
+Pastikan file `.env` telah terisi sesuai kebutuhan konfigurasi.
+
+### 2. Build dan Jalankan Aplikasi
+
+```sh
+docker compose up --build
+```
+Perintah ini akan:
+- Build image aplikasi Go
+- Menyediakan service untuk PostgreSQL dan Redis (jika dikonfigurasi di `docker-compose.yml`)
+- Menghubungkan seluruh service dalam satu jaringan
+
+### 3. Mengakses Aplikasi
+
+- API: `http://localhost:8080`
+- Swagger UI: `http://localhost:8080/swagger/index.html`  
+  (Proteksi basic auth, user & password lihat `.env`)
+
+> **Tips:**  
+> Untuk development, gunakan `docker compose up --build` agar perubahan kode terupdate di container.
+
+### 4. Perintah Docker Lainnya
+
+- **Hentikan service:**
+  ```sh
+  docker compose down
+  ```
+- **Lihat log service:**
+  ```sh
+  docker compose logs -f
+  ```
+- **Masuk ke container aplikasi:**
+  ```sh
+  docker compose exec app sh
+  ```
+
+### 5. Contoh Struktur `docker-compose.yml`
+
+```yaml
+version: "3.8"
+services:
+  app:
+    build: .
+    env_file: .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+volumes:
+  dbdata:
+  redisdata:
+```
+
+---
+
 ## Konfigurasi `.env` Contoh
 
 ```env
+# Database configuration
 DB_HOST=localhost
-DB_PORT=5432
+DB_PORT=5454
 DB_USER=postgres
-DB_PASSWORD=123456
-DB_NAME=xyz_multifinance
+DB_PASSWORD=mysecretpassword
+DB_NAME=xyzdb
 
+
+# Redis
 REDIS_ADDR=localhost:6379
 REDIS_PASSWORD=
 REDIS_DB=0
 
+# Kafka
 KAFKA_BROKERS=localhost:9092
-KAFKA_CLIENT_ID=xyz-multifinance
+KAFKA_CLIENT_ID=pt-xyz-app
 
-SERVER_PORT=8080
+# Server configuration
+SERVER_PORT=8081
 
-SWAGGER_USER=internaluser
-SWAGGER_PASS=supersecret
+# Swagger user & password
+SWAGGER_USER=admin
+SWAGGER_PASS=password
+
+# JWT_SECRET
+JWT_SECRET=123kaslmca
 ```
 
 ---
