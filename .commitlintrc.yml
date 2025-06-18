@@ -1,0 +1,48 @@
+# Aturan konvensi pesan commit untuk PT-XYZ-Multifinance
+# https://commitlint.js.org/
+# Cocok dipakai bersama Husky, lint-staged, atau pre-commit hook lain.
+
+extends:
+  - "@commitlint/config-conventional"
+
+rules:
+  # Tipe yang diizinkan
+  type-enum:
+    - 2
+    - always
+    - [
+        "feat",      # Fitur baru
+        "fix",       # Perbaikan bug
+        "docs",      # Perubahan dokumentasi
+        "style",     # Perubahan format/penulisan (tidak mengubah kode)
+        "refactor",  # Refactor kode tanpa bug/fitur
+        "perf",      # Peningkatan performa
+        "test",      # Penambahan/perbaikan test
+        "chore",     # Perubahan minor (build, tools, dsb)
+        "ci",        # Perubahan pipeline/CI
+        "build"      # Perubahan build tool/dependency
+      ]
+  # Panjang summary maksimal
+  header-max-length:
+    - 2
+    - always
+    - 72
+  # Tidak boleh ada titik di akhir summary
+  header-full-stop:
+    - 2
+    - never
+    - "."
+  # Scope boleh kosong/tidak
+  scope-empty:
+    - 1
+    - never
+  # Body dan footer opsional, tidak divalidasi ketat
+  body-max-line-length:
+    - 1
+    - always
+    - 100
+
+# Contoh pesan commit yang diterima:
+# feat(auth): tambah login JWT
+# fix(user): perbaiki validasi email user
+# docs(readme): update cara setup
