@@ -1,0 +1,47 @@
+@startuml
+' ========== Entry Point & External Layer ==========
+rectangle "main.go (cmd/)" as main
+rectangle "API Gateway / Load Balancer" as gateway
+rectangle "Swagger UI (docs/)" as swagger
+
+' ========== Interface Layer ==========
+rectangle "HTTP Handler\n(internal/handler)" as handler
+rectangle "Middleware\n(internal/middleware)" as middleware
+
+' ========== Application/Usecase Layer ==========
+rectangle "Usecase Layer\n(internal/usecase)" as usecase
+
+' ========== Domain Layer ==========
+rectangle "Domain Layer\n(internal/domain)" as domain
+
+' ========== Infrastructure Layer ==========
+rectangle "Repository Impl\n(internal/repository)" as repo
+rectangle "DB, Redis, etc\n(pkg/)" as infra
+
+' ========== Storage Layer ==========
+database "PostgreSQL\n(ACID, Transactional)" as db
+rectangle "Redis" as redis
+
+' ========== Config ==========
+rectangle "Config/\n.env, config.go" as config
+
+' ========== Testing ==========
+rectangle "Test/\nUnit & Integration" as test
+
+' ========== Relationships & Flow ==========
+main -down-> config : Load config
+main -down-> handler : Start HTTP server
+main -down-> middleware : Register middleware
+gateway -down-> handler : Forward HTTP requests
+handler -down-> usecase : Call business logic
+usecase -down-> domain : Use entity\nand contracts
+usecase -down-> repo : Access data
+repo -down-> infra : DB/Redis client
+infra -down-> db : Query/Tx
+infra -down-> redis : Cache
+
+handler -right-> swagger : Serve API Docs
+
+test ..> usecase : Unit test
+test ..> repo : Integration test
+@enduml
