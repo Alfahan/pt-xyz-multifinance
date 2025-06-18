@@ -1,0 +1,61 @@
+@startuml
+' Entity: consumers
+entity "consumers" as consumers {
+  * id : UUID <<PK>>
+  --
+  nik : VARCHAR(20) <<UNIQUE>>
+  full_name : VARCHAR(100)
+  legal_name : VARCHAR(100)
+  birth_place : VARCHAR(50)
+  birth_date : DATE
+  salary : BIGINT
+  photo_ktp : TEXT
+  photo_selfie : TEXT
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+' Entity: consumer_limits
+entity "consumer_limits" as consumer_limits {
+  * id : UUID <<PK>>
+  --
+  consumer_id : UUID <<FK>>
+  tenor_month : INTEGER <<CHECK: 1,2,3,6>>
+  max_limit : BIGINT
+  used_limit : BIGINT
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+' Entity: transactions
+entity "transactions" as transactions {
+  * id : UUID <<PK>>
+  --
+  contract_number : VARCHAR(50) <<UNIQUE>>
+  consumer_id : UUID <<FK>>
+  tenor_month : INTEGER <<CHECK: 1,2,3,6>>
+  otr : BIGINT
+  admin_fee : BIGINT
+  installment : BIGINT
+  interest : BIGINT
+  asset_name : VARCHAR(100)
+  created_at : TIMESTAMP
+}
+
+' Entity: users
+entity "users" as users {
+  * id : UUID <<PK>>
+  --
+  username : VARCHAR(255)
+  email : VARCHAR(255) <<UNIQUE>>
+  password : TEXT
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+' Relationship: consumer_limits -> consumers
+consumer_limits::consumer_id }o--|| consumers::id : "consumer_id (FK)"
+
+' Relationship: transactions -> consumers
+transactions::consumer_id }o--|| consumers::id : "consumer_id (FK)"
+@enduml
