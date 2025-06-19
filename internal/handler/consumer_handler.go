@@ -20,7 +20,6 @@ func NewConsumerHandler(uc usecase.ConsumerUsecase) *ConsumerHandler {
 // Create godoc
 // @Summary      Register new consumer
 // @Description  Create/register a new consumer
-// @Param X-CSRF-Token header string true "CSRF Token"
 // @Tags         consumer
 // @Accept       json
 // @Produce      json
@@ -44,7 +43,6 @@ func (h *ConsumerHandler) Create(c echo.Context) error {
 // GetByID godoc
 // @Summary      Get consumer by ID
 // @Description  Get detail of consumer by ID
-// @Param X-CSRF-Token header string true "CSRF Token"
 // @Tags         consumer
 // @Produce      json
 // @Param        id   path      string  true  "Consumer ID"

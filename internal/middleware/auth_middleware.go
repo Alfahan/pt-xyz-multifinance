@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 func JWTMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
@@ -43,32 +42,5 @@ func JWTMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		c.Set("userID", claims.UserID)
 
 		return next(c)
-	}
-}
-
-func CSP(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		// Skip CSP untuk /swagger
-		if strings.HasPrefix(c.Path(), "/swagger") {
-			return next(c)
-		}
-
-		c.Response().Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none';")
-		return next(c)
-	}
-}
-
-// CustomCSRFMiddleware wraps Echo's CSRF middleware but skips certain paths (like /swagger)
-func CustomCSRFMiddleware(config middleware.CSRFConfig) echo.MiddlewareFunc {
-	csrf := middleware.CSRFWithConfig(config)
-
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			// Skip CSRF for Swagger routes
-			if strings.HasPrefix(c.Path(), "/swagger/*") {
-				return next(c)
-			}
-			return csrf(next)(c)
-		}
 	}
 }
