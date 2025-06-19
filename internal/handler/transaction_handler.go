@@ -19,7 +19,6 @@ func NewTransactionHandler(transactionUC usecase.TransactionUsecase) *Transactio
 
 // CreateTransaction godoc
 // @Summary Create a new transaction
-// @Param X-CSRF-Token header string true "CSRF Token"
 // @Description Endpoint to create a new transaction. Validates consumer limit and processes the transaction.
 // @Tags Transactions
 // @Accept json
@@ -44,7 +43,6 @@ func (h *TransactionHandler) CreateTransaction(c echo.Context) error {
 
 // GetTransactionByID godoc
 // @Summary Get transaction by ID
-// @Param X-CSRF-Token header string true "CSRF Token"
 // @Description Fetch details of a transaction by its ID.
 // @Tags Transactions
 // @Accept json

@@ -59,15 +59,6 @@ func main() {
 	// Middleware Rate Limiter (misal global: 20 req/detik/IP)
 	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
 
-	// Middleware CSP
-	e.Use(customMiddleware.CSP)
-
-	// Middleware CSRF
-	e.Use(customMiddleware.CustomCSRFMiddleware(middleware.CSRFConfig{
-		TokenLookup: "header:X-CSRF-Token",
-		CookieName:  "_csrf",
-	}))
-
 	// Ambil username dan password Swagger dari .env/env
 	swaggerUser := os.Getenv("SWAGGER_USER")
 	swaggerPass := os.Getenv("SWAGGER_PASS")
