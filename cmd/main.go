@@ -22,7 +22,7 @@ import (
 // @title           PT-XYZ Multifinance API
 // @version         1.0
 // @description     API untuk PT-XYZ Multifinance
-// @host            localhost:8081
+// @host            localhost:8080
 // @BasePath        /
 // @securityDefinitions.apikey BearerAuth
 // @type            http
@@ -56,6 +56,18 @@ func main() {
 
 	e := echo.New()
 
+	// Middleware Rate Limiter (misal global: 20 req/detik/IP)
+	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
+
+	// Middleware CSP
+	e.Use(customMiddleware.CSP)
+
+	// Middleware CSRF
+	e.Use(customMiddleware.CustomCSRFMiddleware(middleware.CSRFConfig{
+		TokenLookup: "header:X-CSRF-Token",
+		CookieName:  "_csrf",
+	}))
+
 	// Ambil username dan password Swagger dari .env/env
 	swaggerUser := os.Getenv("SWAGGER_USER")
 	swaggerPass := os.Getenv("SWAGGER_PASS")
@@ -67,18 +79,6 @@ func main() {
 		}
 		return false, nil
 	})
-
-	// Middleware Rate Limiter (misal global: 20 req/detik/IP)
-	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
-
-	// Middleware CSP
-	e.Use(customMiddleware.CSP)
-
-	// Middleware CSRF
-	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
-		TokenLookup: "header:X-CSRF-Token",
-		CookieName:  "_csrf",
-	}))
 
 	// Swagger endpoint
 	e.GET("/swagger/*", echoSwagger.WrapHandler, swaggerBasicAuth)

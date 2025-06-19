@@ -21,6 +21,7 @@ func NewUserHandler(uc usecase.UserUsecase) *UserHandler {
 // Register godoc
 // @Summary      Register new user
 // @Description  Create/register a new user
+// @Param X-CSRF-Token header string true "CSRF Token"
 // @Tags         user
 // @Accept       json
 // @Produce      json
@@ -45,6 +46,7 @@ func (h *UserHandler) Register(c echo.Context) error {
 // Login godoc
 // @Summary      Login user
 // @Description  Authenticate user and generate a token
+// @Param X-CSRF-Token header string true "CSRF Token"
 // @Tags         user
 // @Accept       json
 // @Produce      json
