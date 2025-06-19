@@ -35,6 +35,13 @@ const docTemplate = `{
                 "summary": "Register new consumer",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "CSRF Token",
+                        "name": "X-CSRF-Token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Consumer Data",
                         "name": "consumer",
                         "in": "body",
@@ -81,6 +88,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "CSRF Token",
+                        "name": "X-CSRF-Token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Consumer ID",
                         "name": "id",
                         "in": "path",
@@ -120,6 +134,13 @@ const docTemplate = `{
                 ],
                 "summary": "Login user",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CSRF Token",
+                        "name": "X-CSRF-Token",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Login Credentials",
                         "name": "user",
@@ -172,6 +193,13 @@ const docTemplate = `{
                 ],
                 "summary": "Register new user",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CSRF Token",
+                        "name": "X-CSRF-Token",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "User Data",
                         "name": "user",
@@ -234,6 +262,13 @@ const docTemplate = `{
                 "summary": "Create a new transaction",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "CSRF Token",
+                        "name": "X-CSRF-Token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Transaction data",
                         "name": "transaction",
                         "in": "body",
@@ -279,6 +314,13 @@ const docTemplate = `{
                 ],
                 "summary": "Get transaction by ID",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CSRF Token",
+                        "name": "X-CSRF-Token",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Transaction ID",
@@ -535,7 +577,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8081",
+	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "PT-XYZ Multifinance API",

@@ -147,7 +147,7 @@ definitions:
       tenor_month:
         type: integer
     type: object
-host: localhost:8081
+host: localhost:8080
 info:
   contact: {}
   description: API untuk PT-XYZ Multifinance
@@ -160,6 +160,11 @@ paths:
       - application/json
       description: Create/register a new consumer
       parameters:
+      - description: CSRF Token
+        in: header
+        name: X-CSRF-Token
+        required: true
+        type: string
       - description: Consumer Data
         in: body
         name: consumer
@@ -188,6 +193,11 @@ paths:
     get:
       description: Get detail of consumer by ID
       parameters:
+      - description: CSRF Token
+        in: header
+        name: X-CSRF-Token
+        required: true
+        type: string
       - description: Consumer ID
         in: path
         name: id
@@ -217,6 +227,11 @@ paths:
       - application/json
       description: Authenticate user and generate a token
       parameters:
+      - description: CSRF Token
+        in: header
+        name: X-CSRF-Token
+        required: true
+        type: string
       - description: Login Credentials
         in: body
         name: user
@@ -251,6 +266,11 @@ paths:
       - application/json
       description: Create/register a new user
       parameters:
+      - description: CSRF Token
+        in: header
+        name: X-CSRF-Token
+        required: true
+        type: string
       - description: User Data
         in: body
         name: user
@@ -292,6 +312,11 @@ paths:
       description: Endpoint to create a new transaction. Validates consumer limit
         and processes the transaction.
       parameters:
+      - description: CSRF Token
+        in: header
+        name: X-CSRF-Token
+        required: true
+        type: string
       - description: Transaction data
         in: body
         name: transaction
@@ -322,6 +347,11 @@ paths:
       - application/json
       description: Fetch details of a transaction by its ID.
       parameters:
+      - description: CSRF Token
+        in: header
+        name: X-CSRF-Token
+        required: true
+        type: string
       - description: Transaction ID
         in: path
         name: id
