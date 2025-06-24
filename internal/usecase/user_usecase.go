@@ -82,7 +82,10 @@ func (u *userUsecase) Login(ctx context.Context, req *dto.LoginRequest) (*dto.Lo
 	}
 
 	// Generate token
-	token := pkg.GenerateToken(user.ID) // Pastikan user.ID bertipe int64
+	token, err := pkg.GenerateToken(user.ID)
+	if err != nil {
+		return nil, err
+	}
 
 	// Buat response
 	resp := &dto.LoginResponse{

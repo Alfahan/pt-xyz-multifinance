@@ -8,14 +8,17 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-var secretKey = []byte(os.Getenv("JWT_SECRET"))
+// getSecretKey reads JWT_SECRET from environment at runtime
+func getSecretKey() []byte {
+	return []byte(os.Getenv("JWT_SECRET"))
+}
 
 type Claims struct {
 	UserID string `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(userID string) string {
+func GenerateToken(userID string) (string, error) {
 	claims := &Claims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -24,8 +27,11 @@ func GenerateToken(userID string) string {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, _ := token.SignedString(secretKey)
-	return signedToken
+	signedToken, err := token.SignedString(getSecretKey())
+	if err != nil {
+		return "", err
+	}
+	return signedToken, nil
 }
 
 func ValidateToken(token string) (*Claims, error) {
@@ -35,7 +41,7 @@ func ValidateToken(token string) (*Claims, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
 		}
-		return secretKey, nil
+		return getSecretKey(), nil
 	})
 
 	if err != nil {
